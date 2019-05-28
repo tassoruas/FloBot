@@ -16,10 +16,39 @@ namespace FloBot
     {
         private AutoItX3 autoIt;
         private bool Running = false;
+        KeyboardHook keyboardHook = new KeyboardHook();
+
         public Main()
         {
             InitializeComponent();
             autoIt = new AutoItX3();
+            keyboardHook.Start();
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            keyboardHook.KeyPress += new KeyPressEventHandler(keyboardHook_KeyPress);
+        }
+
+        void keyboardHook_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar.ToString() == "*")
+            {
+                if (Running)
+                {
+                    Running = false;
+                    Close();
+                    lblRunning.Text = "False";
+                }
+                else
+                {
+                    Running = true;
+                    StartBotting();
+                    MessageBox.Show("Bot Running");
+                    lblRunning.Text = "True";
+                }
+
+            }
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -57,11 +86,11 @@ namespace FloBot
                     }
                 }
 
-                autoIt.Sleep(500);
+                autoIt.Sleep(300);
                 autoIt.Send("{TAB}");
-                autoIt.Sleep(500);
+                autoIt.Sleep(300);
 
-                while (CheckIfMonsterAvailable() == true)
+                while (CheckIfMonsterAvailable() == true && Running)
                 {
                     autoIt.Send("{SPACE}");
                     autoIt.Sleep(100);
@@ -97,26 +126,13 @@ namespace FloBot
             autoIt.WinActivate("Florensia ver2.02.00");
 
             var pixel = autoIt.PixelGetColor(Globals.SitHpPixel_X, Globals.SitHpPixel_Y);
-            string hexValue = pixel.ToString("X");
-            string globalsValue = string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", Globals.SitHpPixelColor.A, Globals.SitHpPixelColor.R, Globals.SitHpPixelColor.G, Globals.SitHpPixelColor.B);
-            if (globalsValue.Substring(0, 5) == "#FF00")
-                hexValue = "#FF00" + hexValue;
-            else
-                hexValue = "#FF" + hexValue;
-            if (hexValue != globalsValue)
+            if (pixel != Globals.SitHpPixelColor)
             {
                 return true;
             }
 
             pixel = autoIt.PixelGetColor(Globals.SitMpPixel_X, Globals.SitMpPixel_Y);
-            hexValue = pixel.ToString("X");
-            globalsValue = string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", Globals.SitMpPixelColor.A, Globals.SitMpPixelColor.R, Globals.SitMpPixelColor.G, Globals.SitMpPixelColor.B);
-            if (globalsValue.Substring(0, 5) == "#FF00")
-                hexValue = "#FF00" + hexValue;
-            else
-                hexValue = "#FF" + hexValue;
-
-            if (hexValue != globalsValue)
+            if (pixel != Globals.SitMpPixelColor)
             {
                 return true;
             }
@@ -127,19 +143,18 @@ namespace FloBot
         public void Sit()
         {
             autoIt.Send("{=}");
+            while (CheckForSit())
+            {
+                autoIt.Sleep(500);
+            }
+            autoIt.Send("{=}");
         }
 
         public bool CheckIfMonsterAvailable()
         {
             autoIt.WinActivate("Florensia ver2.02.00");
             var pixel = autoIt.PixelGetColor(Globals.MonsterAvailablePixel_X, Globals.MonsterAvailablePixel_Y);
-            string globalsValue = string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", Globals.MonsterAvailablePixelColor.A, Globals.MonsterAvailablePixelColor.R, Globals.MonsterAvailablePixelColor.G, Globals.MonsterAvailablePixelColor.B);
-            string hexValue = pixel.ToString("X");
-            if (globalsValue.Substring(0, 5) == "#FF00")
-                hexValue = "#FF00" + hexValue;
-            else
-                hexValue = "#FF" + hexValue;
-            if (hexValue != globalsValue)
+            if (pixel != Globals.MonsterAvailablePixelColor)
             {
                 return false;
             }
@@ -151,37 +166,27 @@ namespace FloBot
 
         public void UseSkills()
         {
-
+            autoIt.Send("{1}");
         }
 
         public bool CheckHpForPotion()
         {
             autoIt.WinActivate("Florensia ver2.02.00");
             var pixel = autoIt.PixelGetColor(Globals.HpPotionPixel_X, Globals.HpPotionPixel_Y);
-            string globalsValue = string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", Globals.HpPotionPixelColor.A, Globals.HpPotionPixelColor.R, Globals.HpPotionPixelColor.G, Globals.HpPotionPixelColor.B);
-            string hexValue = pixel.ToString("X");
-            if (globalsValue.Substring(0, 5) == "#FF00")
-                hexValue = "#FF00" + hexValue;
-            else
-                hexValue = "#FF" + hexValue;
-            if (hexValue != globalsValue)
+            if (pixel != Globals.HpPotionPixelColor)
                 return true;
-            else return false;
+            else
+                return false;
         }
 
         public bool CheckMpForPotion()
         {
             autoIt.WinActivate("Florensia ver2.02.00");
             var pixel = autoIt.PixelGetColor(Globals.MpPotionPixel_X, Globals.MpPotionPixel_Y);
-            string globalsValue = string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", Globals.MpPotionPixelColor.A, Globals.MpPotionPixelColor.R, Globals.MpPotionPixelColor.G, Globals.MpPotionPixelColor.B);
-            string hexValue = pixel.ToString("X");
-            if (globalsValue.Substring(0, 5) == "#FF00")
-                hexValue = "#FF00" + hexValue;
-            else
-                hexValue = "#FF" + hexValue;
-            if (hexValue != globalsValue)
+            if (pixel != Globals.MpPotionPixelColor)
                 return true;
-            else return false;
+            else
+                return false;
         }
 
         public void UseHpPotion()
@@ -198,5 +203,84 @@ namespace FloBot
         {
             autoIt.Send("{x}");
         }
+
+        /// <summary>
+        ///  THIS IS FOR AUTOMATIC INITIALIZATION (DEPRECATED)
+        /// </summary>
+        public void InitializeConfigurations()
+        {
+            object pixelSearch;
+
+            #region GET HP POTION XY
+            pixelSearch = autoIt.PixelSearch(0, 0, 300, 300, 13372501);
+            if (autoIt.error != 1)
+            {
+                object[] cord = pixelSearch as object[];
+                if (autoIt.PixelGetColor((int)cord[0] - 1, (int)cord[1]) == 10422594)
+                {
+                    Globals.HpPotionPixel_X = (int)cord[0];
+                    Globals.HpPotionPixel_Y = (int)cord[1];
+                }
+                else
+                {
+                    MessageBox.Show("HP Potion initializing error!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("HP Potion initializing error!");
+            }
+            #endregion
+
+            #region GET MP POTION XY
+            pixelSearch = autoIt.PixelSearch(0, 0, 300, 300, 7403721);
+            if (autoIt.error != 1)
+            {
+                object[] cord = pixelSearch as object[];
+                if (autoIt.PixelGetColor((int)cord[0] + 4, (int)cord[1]) == 47288)
+                {
+                    Globals.MpPotionPixel_X = (int)cord[0] + 4;
+                    Globals.MpPotionPixel_Y = (int)cord[1];
+                }
+                else
+                {
+                    MessageBox.Show("MP Potion initializing error!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("MP Potion initializing error!");
+            }
+            #endregion
+
+            #region GET MONSTERS HEADER XY
+            pixelSearch = autoIt.PixelSearch(250, 0, 1000, 250, 13372501);
+            if (autoIt.error != 1)
+            {
+                object[] cord = pixelSearch as object[];
+                if (autoIt.PixelGetColor((int)cord[0] - 1, (int)cord[1]) == 10422594)
+                {
+                    Globals.MonsterAvailablePixel_X = (int)cord[0];
+                    Globals.MonsterAvailablePixel_Y = (int)cord[1];
+                    MessageBox.Show("Monster XY: " + cord[0].ToString() + ", " + cord[1].ToString());
+                }
+                else
+                {
+                    MessageBox.Show("Monster Header initializing error!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Monster Header initializing error!");
+            }
+            #endregion
+        }
+
+        private void btnTeste_Click(object sender, EventArgs e)
+        {
+            InitializeConfigurations();
+        }
+
+
     }
 }

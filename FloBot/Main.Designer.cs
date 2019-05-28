@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblRunning = new System.Windows.Forms.Label();
             this.btnSettings = new System.Windows.Forms.Button();
+            this.btnTeste = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -83,11 +84,22 @@
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
+            // btnTeste
+            // 
+            this.btnTeste.Location = new System.Drawing.Point(15, 139);
+            this.btnTeste.Name = "btnTeste";
+            this.btnTeste.Size = new System.Drawing.Size(75, 23);
+            this.btnTeste.TabIndex = 5;
+            this.btnTeste.Text = "Testes";
+            this.btnTeste.UseVisualStyleBackColor = true;
+            this.btnTeste.Click += new System.EventHandler(this.btnTeste_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(113, 127);
+            this.ClientSize = new System.Drawing.Size(113, 124);
+            this.Controls.Add(this.btnTeste);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.lblRunning);
             this.Controls.Add(this.label1);
@@ -97,6 +109,7 @@
             this.MinimizeBox = false;
             this.Name = "Main";
             this.Text = "FloBot";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -109,6 +122,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblRunning;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnTeste;
     }
 }
 

@@ -117,4 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>For this bot to work, you will need to run Florensia in Windowed mode!
+
+For configuring:
+1) Click on "Configure" button
+2) Put the mouse above the pixel you want to be the comparison point
+(if you have clicked the game, maybe the message box of configuration appeared but in background)
+3) Press the keyboard key you want to configure
+
+Key 1 -&gt; Monster HP Bar **(SELECT A BLUE PIXEL IN THE MONSTER'S LEVEL!!!)** (REQUIRED TO RUN) 
+Key 2 -&gt; If Use HP Potion enabled, HP to check if needs to use HP Potion
+Key 3 -&gt; If Use MP Potion enabled, MP to check if needs to use MP Potion
+Key 4 -&gt; If Sit enabled, HP to check if needs to sit
+Key 5 -&gt; If Sit enabled, MP to check if needs to sit
+Key 6 -&gt; Maximum HP point, to know when you can get up again (only required if sit enabled)
+Key 7 -&gt; Maximum MP point, to know when you can get up again (only required if sit enabled)
+
+To start running, click the "Start" button or press the * key on your keyboard</value>
+  </data>
 </root>
