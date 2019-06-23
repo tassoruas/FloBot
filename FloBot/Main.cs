@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoItX3Lib;
 
@@ -21,6 +16,8 @@ namespace FloBot
         public Main()
         {
             InitializeComponent();
+            Licensing lic = new Licensing();
+            lic.GenerateComputerId();
             autoIt = new AutoItX3();
             keyboardHook.Start();
         }
@@ -204,83 +201,50 @@ namespace FloBot
             autoIt.Send("{x}");
         }
 
-        /// <summary>
-        ///  THIS IS FOR AUTOMATIC INITIALIZATION (DEPRECATED)
-        /// </summary>
-        public void InitializeConfigurations()
+        private void tmrCheckHP_Tick(object sender, EventArgs e)
         {
-            object pixelSearch;
-
-            #region GET HP POTION XY
-            pixelSearch = autoIt.PixelSearch(0, 0, 300, 300, 13372501);
-            if (autoIt.error != 1)
+            if (Running)
             {
-                object[] cord = pixelSearch as object[];
-                if (autoIt.PixelGetColor((int)cord[0] - 1, (int)cord[1]) == 10422594)
+                int hpValue = CheckMemoryHP();
+                lblHp.Text = Convert.ToString(hpValue);
+                if (hpValue < 2900)
                 {
-                    Globals.HpPotionPixel_X = (int)cord[0];
-                    Globals.HpPotionPixel_Y = (int)cord[1];
-                }
-                else
-                {
-                    MessageBox.Show("HP Potion initializing error!");
+                    autoIt.Send("{=}");
+                    autoIt.Sleep(10000);
+                    autoIt.MouseClick();
                 }
             }
-            else
-            {
-                MessageBox.Show("HP Potion initializing error!");
-            }
-            #endregion
-
-            #region GET MP POTION XY
-            pixelSearch = autoIt.PixelSearch(0, 0, 300, 300, 7403721);
-            if (autoIt.error != 1)
-            {
-                object[] cord = pixelSearch as object[];
-                if (autoIt.PixelGetColor((int)cord[0] + 4, (int)cord[1]) == 47288)
-                {
-                    Globals.MpPotionPixel_X = (int)cord[0] + 4;
-                    Globals.MpPotionPixel_Y = (int)cord[1];
-                }
-                else
-                {
-                    MessageBox.Show("MP Potion initializing error!");
-                }
-            }
-            else
-            {
-                MessageBox.Show("MP Potion initializing error!");
-            }
-            #endregion
-
-            #region GET MONSTERS HEADER XY
-            pixelSearch = autoIt.PixelSearch(250, 0, 1000, 250, 13372501);
-            if (autoIt.error != 1)
-            {
-                object[] cord = pixelSearch as object[];
-                if (autoIt.PixelGetColor((int)cord[0] - 1, (int)cord[1]) == 10422594)
-                {
-                    Globals.MonsterAvailablePixel_X = (int)cord[0];
-                    Globals.MonsterAvailablePixel_Y = (int)cord[1];
-                    MessageBox.Show("Monster XY: " + cord[0].ToString() + ", " + cord[1].ToString());
-                }
-                else
-                {
-                    MessageBox.Show("Monster Header initializing error!");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Monster Header initializing error!");
-            }
-            #endregion
         }
 
-        private void btnTeste_Click(object sender, EventArgs e)
+        private int CheckMemoryHP()
         {
-            InitializeConfigurations();
+            uint pointerAddress = 0x0071CAF4;
+            int pointerOffset = 0x2CC;
+            uint offset = 0;
+            int bytesReadOut = 0;
+
+            Process process = Process.GetProcessesByName("FlorensiaEN.bin").ToList().FirstOrDefault();
+            if (process != null)
+            {
+                ProcessMemoryReader mReader = new ProcessMemoryReader();
+                mReader.ReadProcess = process;
+                mReader.OpenProcess();
+                offset = BitConverter.ToUInt32(mReader.ReadMemory((IntPtr)(pointerAddress + (uint)process.Modules[0].BaseAddress), 4, out bytesReadOut), 0);
+                if (pointerOffset < 0)
+                    offset -= (uint)(Math.Abs(pointerOffset));
+                else
+                    offset += (uint)pointerOffset;
+
+                byte[] buffer = mReader.ReadMemory((IntPtr)offset, 2, out bytesReadOut);
+                int intValue = BitConverter.ToInt16(buffer, 0);
+                return intValue;
+            }
+            return 0;
         }
 
+        private void btnTestes_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }

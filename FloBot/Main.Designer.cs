@@ -28,12 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lblRunning = new System.Windows.Forms.Label();
             this.btnSettings = new System.Windows.Forms.Button();
-            this.btnTeste = new System.Windows.Forms.Button();
+            this.txtTeste = new System.Windows.Forms.TextBox();
+            this.tmrCheckHP = new System.Windows.Forms.Timer(this.components);
+            this.lblHp = new System.Windows.Forms.Label();
+            this.btnTestes = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -84,22 +88,47 @@
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
-            // btnTeste
+            // txtTeste
             // 
-            this.btnTeste.Location = new System.Drawing.Point(15, 139);
-            this.btnTeste.Name = "btnTeste";
-            this.btnTeste.Size = new System.Drawing.Size(75, 23);
-            this.btnTeste.TabIndex = 5;
-            this.btnTeste.Text = "Testes";
-            this.btnTeste.UseVisualStyleBackColor = true;
-            this.btnTeste.Click += new System.EventHandler(this.btnTeste_Click);
+            this.txtTeste.Location = new System.Drawing.Point(120, 36);
+            this.txtTeste.Multiline = true;
+            this.txtTeste.Name = "txtTeste";
+            this.txtTeste.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtTeste.Size = new System.Drawing.Size(376, 37);
+            this.txtTeste.TabIndex = 6;
+            // 
+            // tmrCheckHP
+            // 
+            this.tmrCheckHP.Enabled = true;
+            this.tmrCheckHP.Tick += new System.EventHandler(this.tmrCheckHP_Tick);
+            // 
+            // lblHp
+            // 
+            this.lblHp.AutoSize = true;
+            this.lblHp.Location = new System.Drawing.Point(142, 9);
+            this.lblHp.Name = "lblHp";
+            this.lblHp.Size = new System.Drawing.Size(28, 13);
+            this.lblHp.TabIndex = 7;
+            this.lblHp.Text = "HP: ";
+            // 
+            // btnTestes
+            // 
+            this.btnTestes.Location = new System.Drawing.Point(15, 137);
+            this.btnTestes.Name = "btnTestes";
+            this.btnTestes.Size = new System.Drawing.Size(75, 23);
+            this.btnTestes.TabIndex = 8;
+            this.btnTestes.Text = "TESTE";
+            this.btnTestes.UseVisualStyleBackColor = true;
+            this.btnTestes.Click += new System.EventHandler(this.btnTestes_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(113, 124);
-            this.Controls.Add(this.btnTeste);
+            this.ClientSize = new System.Drawing.Size(508, 172);
+            this.Controls.Add(this.btnTestes);
+            this.Controls.Add(this.lblHp);
+            this.Controls.Add(this.txtTeste);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.lblRunning);
             this.Controls.Add(this.label1);
@@ -122,7 +151,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblRunning;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.Button btnTeste;
+        private System.Windows.Forms.TextBox txtTeste;
+        private System.Windows.Forms.Timer tmrCheckHP;
+        private System.Windows.Forms.Label lblHp;
+        private System.Windows.Forms.Button btnTestes;
     }
 }
 
