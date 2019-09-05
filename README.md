@@ -1,7 +1,7 @@
 # FloBot
 This is a bot for a game called Florensia.
 
-#Features:
+# Features:
 
 Auto heal
 
